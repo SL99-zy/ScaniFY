@@ -1,0 +1,32 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './endpoints/privateRoute';
+import { AuthProvider } from './context/AuthContext'; // ✅ AuthProvider is correctly imported
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+import Navbar from './malware/Navbar';
+import Home from './malware/Home';
+import LoginRegister from './malware/LoginRegister';
+import Team from './malware/Team';
+import FileUploader from './malware/FileUploader';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+    <Router> {/* ✅ Router must wrap AuthProvider */}
+        <AuthProvider> {/* ✅ AuthProvider is now inside Router */}
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<LoginRegister />} />
+                <Route path="/register" element={<LoginRegister />} />
+                <Route path="/team" element={<Team />} />
+
+                {/* Protected Route for FileUploader */}
+                <Route element={<PrivateRoute />}>
+                    <Route path="/test" element={<FileUploader />} />
+                </Route>
+            </Routes>
+        </AuthProvider>
+    </Router>
+);
